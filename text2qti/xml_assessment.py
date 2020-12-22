@@ -13,7 +13,7 @@ from .quiz import Quiz, Question, GroupStart, GroupEnd, TextRegion
 
 BEFORE_ITEMS = '''\
 <?xml version="1.0" encoding="UTF-8"?>
-<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/ims_qtiasiv1p2 http://www.imsglobal.org/xsd/ims_qtiasiv1p2p1.xsd">
+<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/ims_qtiasiv1p2 http://www.imsglobal.org/profile/cc/ccv1p2/ccv1p2_qtiasiv1p2p1_v1p0.xsd">
   <assessment ident="{assessment_identifier}" title="{title}">
     <qtimetadata>
       <qtimetadatafield>
@@ -51,7 +51,7 @@ TEXT = '''\
         <itemmetadata>
           <qtimetadata>
             <qtimetadatafield>
-              <fieldlabel>question_type</fieldlabel>
+              <fieldlabel>cc_profile</fieldlabel>
               <fieldentry>text_only_question</fieldentry>
             </qtimetadatafield>
             <qtimetadatafield>
@@ -89,7 +89,7 @@ ITEM_METADATA_MCTF_SHORTANS_MULTANS_NUM = '''\
         <itemmetadata>
           <qtimetadata>
             <qtimetadatafield>
-              <fieldlabel>question_type</fieldlabel>
+              <fieldlabel>cc_profile</fieldlabel>
               <fieldentry>{question_type}</fieldentry>
             </qtimetadatafield>
             <qtimetadatafield>
@@ -472,7 +472,23 @@ def assessment(*, quiz: Quiz, assessment_identifier: str, title_xml: str) -> str
             original_answer_ids = f'text2qti_upload_{question.id}'
         else:
             raise ValueError
-        xml.append(item_metadata.format(question_type=question.type,
+        
+        #Type Change for Schoology CC Import
+        if question.type == 'multiple_choice_question':
+            typechange = 'cc.multiple_choice.v0p1'
+        elif question.type ==  'true_false_question':
+            typechange = 'cc.true_false.v0p1'
+        elif question.type ==  'short_answer_question':
+            typechange = 'cc.fib.v0p1' 
+        elif question.type ==  'multiple_answers_question':
+            typechange = 'cc.multiple_response.v0p1'
+        elif question.type ==  'essay_question':
+            typechange = 'cc.essay.v0p1'    
+        else:
+            typechange = question.type
+        
+        
+        xml.append(item_metadata.format(question_type=typechange,
                                         points_possible=question.points_possible,
                                         original_answer_ids=original_answer_ids,
                                         assessment_question_identifierref=f'text2qti_question_ref_{question.id}'))
