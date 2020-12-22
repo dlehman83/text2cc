@@ -1,6 +1,6 @@
-# text2qti – Create quizzes in QTI format from Markdown-based plain text
+# text2cc – Create quizzes in Common Cartridge format from Markdown-based plain text
 
-text2qti converts
+text2cc converts
 [Markdown](https://daringfireball.net/projects/markdown/)-based plain text
 files into quizzes in QTI format (version 1.2), which can be imported by
 [Canvas](https://www.instructure.com/canvas/) and other educational software.
