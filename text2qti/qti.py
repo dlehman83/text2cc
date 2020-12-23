@@ -23,7 +23,7 @@ class QTI(object):
     '''
     def __init__(self, quiz: Quiz):
         self.quiz = quiz
-        id_base = 'text2qti'
+        id_base = 'text2cc'
         self.manifest_identifier = f'{id_base}_manifest_{quiz.id}'
         self.assessment_identifier = f'{id_base}_assessment_{quiz.id}'
         self.dependency_identifier = f'{id_base}_dependency_{quiz.id}'

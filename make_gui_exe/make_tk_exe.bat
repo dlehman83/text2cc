@@ -11,7 +11,7 @@ if not exist text2qti_tk.pyw (
 )
 
 REM Create and activate a conda env for packaging the .exe
-call conda create -y --name make_text2qti_gui_exe python=3.8 --no-default-packages
+call conda create -y --name make_text2qti_gui_exe python=3.9 --no-default-packages
 call conda activate make_text2qti_gui_exe
 REM List conda envs -- useful for debugging
 call conda info --envs
@@ -25,14 +25,17 @@ if exist ..\setup.py (
         pip install .
         cd make_gui_exe
     ) else (
-        pip install text2qti
+rem pip install text2qti to prevent retrieving the wrong package.  
+        rem pip install text2qti
     )
 ) else (
-    pip install text2qti
+  rem   pip install text2qti
 )
 REM Build .exe
 FOR /F "tokens=* USEBACKQ" %%g IN (`python -c "import text2qti; print(text2qti.__version__)"`) do (SET "TEXT2QTI_VERSION=%%g")
-pyinstaller -F --name text2qti_tk_%TEXT2QTI_VERSION% text2qti_tk.pyw
+del text2qti_tk_%TEXT2QTI_VERSION%.exe
+pyinstaller -F --name text2qti_tk_%TEXT2QTI_VERSION% text2qti_tk.pyw --version-file version.txt
+
 REM Deactivate and delete conda env
 call conda deactivate
 call conda remove -y --name make_text2qti_gui_exe --all

@@ -1,6 +1,15 @@
 # Change Log
 
 
+## v0.6.10 (2020-12)
+* Forked and renamed Project
+* Removed use of assessment_meta, left file in repo for reference 
+* Changed imsmanifest for Schoology
+* Removed advanced features not supported or tested on Schoology.  
+* Converted question types to fit Schoology format.  
+* Added version file to support Windows file version info.
+
+
 ## v0.5.0 (2020-09-28)
 
 * Added `text2qti_tk` executable, which provides a basic graphical user

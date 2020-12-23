@@ -19,7 +19,26 @@ BEFORE_ITEMS = '''\
       <qtimetadatafield>
         <fieldlabel>cc_maxattempts</fieldlabel>
         <fieldentry>1</fieldentry>
+        
       </qtimetadatafield>
+
+<qtimetadatafield>
+				<fieldlabel>
+					cc_profile
+				</fieldlabel>
+				<fieldentry>
+					cc.exam.v0p1
+				</fieldentry>
+			</qtimetadatafield>
+      <qtimetadatafield>
+				<fieldlabel>
+					qmd_assessmenttype
+				</fieldlabel>
+				<fieldentry>
+					Examination
+				</fieldentry>
+			</qtimetadatafield>
+      
     </qtimetadata>
     <section ident="root_section">
 '''
