@@ -1,9 +1,20 @@
 # text2cc – Create quizzes in Common Cartridge format from Markdown-based plain text
 
+Much of the code and documentation are not updated to reflect the new name and Schoology format.
+The only question types supported at this time are:
+
+- Multiple Choice
+- True / False
+- Fill in the blank
+- Multiple Answers
+- Essay
+
+Some will not work and others I've just not been able to test yet.  
+
 text2cc converts
 [Markdown](https://daringfireball.net/projects/markdown/)-based plain text
 files into quizzes in QTI format (version 1.2), which can be imported by
-[Canvas](https://www.instructure.com/canvas/) and other educational software.
+[Schoology](https://www.schoology.com) and other educational software.
 It supports multiple-choice, true/false, multiple-answers, numerical,
 short-answer (fill-in-the-blank), essay, and file-upload questions.  It
 includes basic support for LaTeX math within Markdown, and allows a limited
