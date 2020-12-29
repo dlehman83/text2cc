@@ -34,6 +34,51 @@ rem pip install text2qti to prevent retrieving the wrong package.
 REM Build .exe
 FOR /F "tokens=* USEBACKQ" %%g IN (`python -c "import text2qti; print(text2qti.__version__)"`) do (SET "TEXT2QTI_VERSION=%%g")
 del text2qti_tk_%TEXT2QTI_VERSION%.exe
+REM Set windows exe version info
+FOR /F "tokens=1,2,3 delims=." %%I in ("%TEXT2QTI_VERSION%") do (
+    SET Maj=%%I
+    SET Min=%%J
+	 SET Par=%%K
+	 SET Pri=0
+ )
+
+del version.txt
+rem %Maj%, %Min%, %Par%,%Pri%
+ (
+    for %%I in (
+        "VSVersionInfo("
+  "ffi=FixedFileInfo("
+     "filevers=(%Maj%, %Min%, %Par%,%Pri%),"
+    "prodvers=(%Maj%, %Min%, %Par%,%Pri%),"
+    "mask=0x3f,"
+    "flags=0x0,"
+    "OS=0x40004,"
+    "fileType=0x1,"
+    "subtype=0x0,"
+    "date=(0, 0)"
+    "),"
+  "kids=["
+    "StringFileInfo("
+      "["
+      "StringTable("
+        "u'040904B0',"
+        "[StringStruct(u'CompanyName', u'Text2CC'),"
+        "StringStruct(u'FileDescription', u'Text2CC'),"
+        "StringStruct(u'FileVersion', u'%Maj%.%Min%.%Par%.%Pri%'),"
+        "StringStruct(u'InternalName', u'Text2CC'),"
+        
+        "StringStruct(u'OriginalFilename', u'Text2CC.Exe'),"
+        "StringStruct(u'ProductName', u'Text2CC'),"
+        "StringStruct(u'ProductVersion', u'%Maj%.%Min%.%Par%.%Pri%')])"
+      "])," 
+    "VarFileInfo([VarStruct(u'Translation', [1033, 1200])])"
+  "]"
+")"
+    ) do echo %%~I >> version.txt
+)
+
+
+
 pyinstaller -F --name text2qti_tk_%TEXT2QTI_VERSION% text2qti_tk.pyw --version-file version.txt
 
 REM Deactivate and delete conda env
@@ -47,4 +92,5 @@ rd /s /q "__pycache__"
 rd /s /q "build"
 rd /s /q "dist"
 del *.spec
+del version.txt
 pause
