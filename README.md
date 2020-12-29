@@ -1,17 +1,17 @@
-# text2cc – Create quizzes in Common Cartridge format from Markdown-based plain text
+# Text2cc – Create quizzes in Common Cartridge format from Markdown-based plain text
 
 Much of the code and documentation are not updated to reflect the new name and Schoology format.
 The only question types supported at this time are:
 
-- Multiple Choice
-- True / False
-- Fill in the blank
-- Multiple Answers
-- Essay
+* Multiple Choice
+* True / False
+* Fill in the blank
+* Multiple Answers
+* Essay
 
 Some will not work and others I've just not been able to test yet.  
 
-text2cc converts
+Text2cc converts
 [Markdown](https://daringfireball.net/projects/markdown/)-based plain text
 files into quizzes in QTI format (version 1.2), which can be imported by
 [Schoology](https://www.schoology.com) and other educational software.
@@ -25,9 +25,9 @@ numbers in scientific notation.
 
 ## Examples
 
-text2qti allows quick and efficient quiz creation.  Example
-**multiple-choice** plain-text quiz question that can be converted to QTI and
-then imported by Canvas:
+text2cc allows quick and efficient quiz creation.  Example
+**multiple-choice** plain-text quiz question that can be converted to Common Cartridge and
+then imported by Schoology:
 
 ```
 1.  What is 2+3?
@@ -244,22 +244,16 @@ text2qti includes a graphical application and a command-line application.
   `quiz.zip` (with "quiz" replaced by the name of your file) which is the
   converted quiz in QTI format.
 
-Instructions for using the QTI file with Canvas:
-  * Go to the course in which you want to use the quiz.
-  * Go to Settings, click on "Import Course Content", select "QTI .zip file",
-    choose your file, and click "Import".  Typically you should not need to
-    select a question bank; that should be managed automatically.
-  * While the quiz upload will often be very fast, there is an additional
-    processing step that can take up to several minutes.  The status will
-    probably appear under "Current Jobs" after upload.
-  * Once the quiz import is marked as "Completed", the imported quiz should be
-    available under Quizzes.  If the imported quiz does not appear after
-    several minutes, there may be an error in your quiz file or a bug in
-    `text2qti`.  When Canvas encounters an invalid quiz file, it tends to fail
-    silently; instead of reporting an error in the quiz file, it just never
-    creates a quiz based on the invalid file.
-  * You should **always preview the quiz before use**.  text2qti can detect a
-    number of potential issues, but not everything.
+Instructions for using the ZIP file with Schoology:
+
+* Go to the resources tab.
+* Click the arrow near the top center, then import.
+* Select Common Cartridge then choose a new or existing collection and folder name.
+* Click Next, then attach the file.
+* Select the zip file previously created.
+* Click next. Now your quiz should be imported into the folder and collection you chose.
+You should **always preview the quiz before use**.  text2CC can detect a
+number of potential issues, but not everything.
 
 Typically, you should start your quizzes with a title, like this:
 ```
@@ -326,85 +320,6 @@ The number of questions from the group that are used is specified with
 question is specified with "`points per question:`".  If this is omitted, it
 defaults to `1`.  All questions within a group must be worth the same number
 of points.
-
-
-### Executable code blocks
-
-text2qti can execute the code in Markdown-style fenced code blocks.  Code can
-be used to generate questions within a quiz.  Everything written to stdout by
-the executed code is included in the quiz file; the code block is replaced by
-stdout.
-
-``````
-```{.python .run}
-import textwrap
-for x in [2, 3]:
-    print(textwrap.dedent(rf"""
-        1.  What is ${x}\times 5$?
-        *a) ${x*5}$
-        b)  ${x+1}$
-        """))
-```
-``````
-
-
-For code to be executed, there are a few requirements:
-
-* The code block fences (` ``` `) must not be indented; the code block must be
-  at the top level of the document, not part of a question, choice, or
-  feedback.
-
-* As a security measure, code execution is disabled by default, so executable
-  code blocks will trigger an error.  Run `text2qti` with the option
-  `--run-code-blocks` to enable code execution, or set `run_code_blocks =
-  true` in the text2qti config file in your user or home directory.
-
-* The text immediately after the opening fence must have the form
-  `{.lang .run}` or `{.lang .run executable=<executable>}`.  This is inspired
-  by the code-block attributes in
-  [Pandoc Markdown](https://pandoc.org/MANUAL.html).
-
-  If the keyword argument `executable` is not provided, then `lang` must
-  designate an executable that can run the code once the code has been saved
-  to a file.  In the example above, `python` is extracted from the first line
-  (` ```{.python .run}`),  code is saved in a temporary file, and then the
-  file is executed via `python <file>`.
-
-  If `executable` is used to specify an executable, then `lang` is ignored by
-  `text2qti`, but it is still useful since some editors will use it to provide
-  syntax highlighting.
-
-  When `executable` is specified, the executable path must be quoted with
-  double quotes `"` if it contains anything other than the tilde, Unicode word
-  characters, numbers, forward slashes, periods, hyphens, and underscores.
-  When the executable path is quoted, backslashes and quotation marks are
-  still prohibited; forward slashes should be used under all operating systems
-  including Windows.  A leading `~` in the executable path is expanded to the
-  user's home directory under all operating systems including Windows.
-
-* **Special Python note**:  When `.python` is used with an executable code
-  block without specifying an `executable`, code will run with `python3` if
-  either of these conditions is met:
-
-    - `python3` exists on the system and `python` is equivalent to `python2`.
-
-    - `python` does not exist on the system, but `python3` does exist.
-
-  To avoid ambiguity, you may want to use `.python3` and `.python2` rather
-  than `.python` when working with operating systems other than Windows, or
-  when working with a Windows installation that includes a `python3`
-  executable or symlink.  It is also possible to be even more specific by
-  using something like `.python3.8`.
-
-Each code block is executed in its own process, so data and variables are not
-shared between code blocks.
-
-If an executable code block generates multiple questions that are identical,
-or multiple choices for a single question that are identical, this will be
-detected by `text2qti` and an error will be reported.  Questions or choices
-that may be equivalent, but are not represented by exactly the same text,
-cannot be detected (for example, things like `100` versus `1e2`, or `answer`
-versus `Answer`).
 
 
 ### Additional quiz options
