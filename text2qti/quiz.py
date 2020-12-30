@@ -56,8 +56,8 @@ start_patterns = {
     'end_group': r'END_GROUP',
     'group_pick': r'[Pp]ick:',
     'group_points_per_question': r'[Pp]oints per question:',
-    'start_code': r'```+\s*\S.*',
-    'end_code': r'```+',
+    #'start_code': r'```+\s*\S.*',
+    #'end_code': r'```+',
     'quiz_shuffle_answers': r'[Ss]huffle answers:',
     'quiz_show_correct_answers': r'[Ss]how correct answers:',
     'quiz_one_question_at_a_time': r'[Oo]ne question at a time:',
@@ -70,7 +70,7 @@ comment_patterns = {
     'line_comment': r'%',
 }
 # whether regex needs to check after pattern for content on the same line
-no_content = set(['essay', 'upload', 'start_group', 'end_group', 'start_code', 'end_code'])
+no_content = set(['essay', 'upload', 'start_group', 'end_group'])
 # whether parser needs to check for multi-line content
 single_line = set(['question_points', 'group_pick', 'group_points_per_question',
                    'numerical', 'shortans_correct_choice',
@@ -90,12 +90,7 @@ start_missing_content_re = re.compile('|'.join(r'(?P<{0}>{1}[ \t]*$)'.format(nam
 start_missing_whitespace_re = re.compile('|'.join(r'(?P<{0}>{1}(?=\S))'.format(name, pattern)
                                                   for name, pattern in start_patterns.items()
                                                   if name not in no_content))
-start_code_supported_info_re = re.compile(r'\{\s*'
-                                          r'\.(?P<lang>[a-zA-Z](?:[a-zA-Z0-9]+|[\._\-]+[a-zA-Z0-9]+)*)'
-                                          r'\s+'
-                                          r'\.run'
-                                          r'(?:\s+executable=(?P<executable>[~\w/\.\-]+|"[^\\\"\']+"))?'
-                                          r'\s*\}$')
+
 int_re = re.compile('(?:0|[+-]?[1-9](?:[0-9]+|_[0-9]+)*)$')
 
 
@@ -596,50 +591,14 @@ class Quiz(object):
             n_line_iter = iter(x for x in enumerate(string.splitlines()))
             n, line = next(n_line_iter, (0, None))
             lookahead = False
-            n_code_start = 0
+#            
             while line is not None:
                 match = start_re.match(line)
                 if match:
                     action = match.lastgroup
                     text = line[match.end():].strip()
-                    if action == 'start_code':
-                        info = line.lstrip('`').strip()
-                        info_match = start_code_supported_info_re.match(info)
-                        if info_match is None:
-                            pass
-                        else:
-                            executable = info_match.group('executable')
-                            if executable is not None:
-                                if executable.startswith('"'):
-                                    executable = executable[1:-1]
-                                executable = pathlib.Path(executable).expanduser().as_posix()
-                            else:
-                                executable = info_match.group('lang')
-                                if executable == 'python':
-                                    executable = python_executable
-                            delim = '`'*(len(line) - len(line.lstrip('`')))
-                            n_code_start = n
-                            code_lines = []
-                            n, line = next(n_line_iter, (0, None))
-                            # No lookahead here; all lines are consumed
-                            while line is not None and not (line.startswith(delim) and line[len(delim):] == line.lstrip('`')):
-                                code_lines.append(line)
-                                n, line = next(n_line_iter, (0, None))
-                            if line is None:
-                                raise Text2qtiError(f'In {self.source_name} on line {n}:\nCode closing fence is missing')
-                            if line.lstrip('`').strip():
-                                raise Text2qtiError(f'In {self.source_name} on line {n+1}:\nCode closing fence is missing')
-                            code_lines.append('\n')
-                            code = '\n'.join(code_lines)
-                            try:
-                                stdout = self._run_code(executable, code)
-                            except Exception as e:
-                                raise Text2qtiError(f'In {self.source_name} on line {n_code_start+1}:\n{e}')
-                            code_n_line_iter = ((n_code_start, stdout_line) for stdout_line in stdout.splitlines())
-                            n_line_iter = itertools.chain(code_n_line_iter, n_line_iter)
-                            n, line = next(n_line_iter, (0, None))
-                            continue
-                    elif action in multi_line:
+                    
+                    if action in multi_line:
                         if start_patterns[action].endswith(':'):
                             indent_expandtabs = None
                         else:
@@ -692,7 +651,7 @@ class Quiz(object):
                 try:
                     parse_actions[action](text)
                 except Text2qtiError as e:
-                    if lookahead and n != n_code_start:
+                    if lookahead:
                         raise Text2qtiError(f'In {self.source_name} on line {n}:\n{e}')
                     raise Text2qtiError(f'In {self.source_name} on line {n+1}:\n{e}')
                 if not lookahead:
@@ -733,45 +692,7 @@ class Quiz(object):
         finally:
             self.md.finalize()
 
-    def _run_code(self, executable: str, code: str) -> str:
-        if not self.config['run_code_blocks']:
-            raise Text2qtiError('Code execution for code blocks is not enabled; use --run-code-blocks, or set run_code_blocks = true in config')
-        h = hashlib.blake2b()
-        h.update(code.encode('utf8'))
-        if platform.system() == 'Windows':
-            # Prevent console from appearing for an instant
-            startupinfo = subprocess.STARTUPINFO()
-            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-        else:
-            startupinfo = None
-        with tempfile.TemporaryDirectory() as tempdir:
-            tempdir_path = pathlib.Path(tempdir)
-            code_path = tempdir_path / f'{h.hexdigest()[:16]}.code'
-            code_path.write_text(code, encoding='utf8')
-            cmd = [executable, code_path.as_posix()]
-            try:
-                # stdin is needed for GUI because standard file handles can't
-                # be inherited
-                proc = subprocess.run(cmd,
-                                      stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE,
-                                      startupinfo=startupinfo)
-            except FileNotFoundError as e:
-                raise Text2qtiError(f'Failed to execute code (missing executable "{executable}"?):\n{e}')
-            except Exception as e:
-                raise Text2qtiError(f'Failed to execute code with command "{cmd}":\n{e}')
-        # Use io to handle output as if read from a file in terms of newline
-        # treatment
-        if proc.returncode != 0:
-            stderr_str = io.TextIOWrapper(io.BytesIO(proc.stderr),
-                                          encoding=locale.getpreferredencoding(False),
-                                          errors='backslashreplace').read()
-            raise Text2qtiError(f'Code execution resulted in errors:\n{"-"*50}\n{stderr_str}\n{"-"*50}')
-        try:
-            stdout_str = io.TextIOWrapper(io.BytesIO(proc.stdout),
-                                          encoding=locale.getpreferredencoding(False)).read()
-        except Exception as e:
-            raise Text2qtiError(f'Failed to decode output of executed code:\n{e}')
-        return stdout_str
+    
 
     def append_quiz_title(self, text: str):
         if any(x is not None for x in (self.shuffle_answers_raw, self.show_correct_answers_raw,
