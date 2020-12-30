@@ -183,33 +183,6 @@ def main():
     # current_row += 1
 
 
-    # run_code_blocks_label = tk.Label(
-        # window,
-        # text='Allow executable code blocks:\n(only use for trusted code)',
-        # justify='right',
-    # )
-    # run_code_blocks_label.grid(
-        # row=current_row, column=0, padx=(30, 5), pady=(5, 5),
-        # sticky='nse',
-    # )
-    # run_code_blocks_bool = tk.BooleanVar()
-    # run_code_blocks_bool.set(config['run_code_blocks'])
-    # def run_code_blocks_command():
-        # if run_code_blocks_bool.get():
-            # run_code_blocks_label['fg'] = 'red'
-        # else:
-            # run_code_blocks_label['fg'] = 'black'
-    # run_code_blocks_button = tk.Checkbutton(
-        # window,
-        # variable=run_code_blocks_bool,
-        # command=run_code_blocks_command,
-    # )
-    # run_code_blocks_button.grid(
-        # row=current_row, column=1, sticky='w',
-    # )
-     #current_row += 1
-
-
     def run():
         run_message_text.delete(1.0, tk.END)
         run_message_text['fg'] = 'gray'
@@ -224,7 +197,7 @@ def main():
             return
         #if latex_url_entry.get():
             #config['latex_render_url'] = latex_url_entry.get()
-        #config['run_code_blocks'] = run_code_blocks_bool.get()
+        
         #config['pandoc_mathml'] = pandoc_mathml_bool.get()
 
         file_path = pathlib.Path(file_name)

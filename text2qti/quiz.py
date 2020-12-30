@@ -984,12 +984,6 @@ class Quiz(object):
             raise Text2qtiError('No question group for setting properties')
         self._current_group.append_group_points_per_question(text)
 
-    def append_start_code(self, text: str):
-        raise Text2qtiError('Invalid code block start')
-
-    def append_end_code(self, text: str):
-        raise Text2qtiError('Code block end missing code block start')
-
     def append_unknown(self, text: str):
         if self._next_question_attr:
             raise Text2qtiError('Expected question; question title and/or points were set but not used')

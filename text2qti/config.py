@@ -30,12 +30,12 @@ class Config(dict):
 
     _defaults = {
         'pandoc_mathml': False,
-        'run_code_blocks': False,
+     #   'run_code_blocks': False,
     }
     _key_check = {
         'latex_render_url': lambda x: isinstance(x, str),
         'pandoc_mathml': lambda x: isinstance(x, bool),
-        'run_code_blocks': lambda x: isinstance(x, bool),
+     #   'run_code_blocks': lambda x: isinstance(x, bool),
     }
     _config_path = pathlib.Path('~/.text2qti.bespon').expanduser()
 
