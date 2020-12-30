@@ -9,14 +9,21 @@ The only question types supported at this time are:
 * Multiple Answers
 * Essay
 
-Some will not work and others I've just not been able to test yet.  
+Some will not work and others I've just not been able to test yet. 
+
+Tested and not Working
+
+* File Upload
+* Text Regions
+
+ 
 
 Text2cc converts
 [Markdown](https://daringfireball.net/projects/markdown/)-based plain text
 files into quizzes in QTI format (version 1.2), which can be imported by
 [Schoology](https://www.schoology.com) and other educational software.
 It supports multiple-choice, true/false, multiple-answers, numerical,
-short-answer (fill-in-the-blank), essay, and file-upload questions.  It
+short-answer (fill-in-the-blank) and essay questions.  It
 includes basic support for LaTeX math within Markdown, and allows a limited
 subset of [siunitx](https://ctan.org/pkg/siunitx) notation for units and for
 numbers in scientific notation.
@@ -128,24 +135,7 @@ They only support general question feedback.
 ____
 ```
 
-**File-upload questions** are indicated by a sequence of three or more
-circumflex accents.  They only support general question feedback.
-```
-1.  Upload a file.
-... General question feedback.
-^^^^
-```
 
-**Text regions** outside of questions are supported.  Note that unlike most
-other text, titles like text region titles are treated as plain text, not
-Markdown, due to the QTI format.  Also note that Canvas apparently ignores the
-text region title and only displays the text itself.  Text regions are not
-required to have both a title and text; either may be used alone, but the
-title must come first when both are present.
-```
-Text title:  Instructions about the next questions
-Text:  General comments about the next questions.
-```
 
 
 ## Installation
