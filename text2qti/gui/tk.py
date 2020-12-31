@@ -20,6 +20,7 @@ from ..err import Text2qtiError
 from ..qti import QTI
 from ..quiz import Quiz
 from .. import version
+#from tkinter.ttk import * #possibly not needed
 
 
 
@@ -63,7 +64,7 @@ def main():
     current_row += 1
     version_label = tk.Label(
         window,
-        text=f'Version {version.__version__}',
+        text=f'Version:   {version.__version__}',
     )
     version_label.grid(
         row=current_row, column=0, columnspan=column_count, padx=(30, 30), pady=(0, 30),
@@ -111,6 +112,7 @@ def main():
         row=current_row, column=1, columnspan=column_count-1, padx=(0, 30), pady=(5, 25),
         sticky='nsew',
     )
+    file_browser_button.bind('<Return>', lambda e: browse_files())
     current_row += 1
 
  #Above here set good
@@ -246,6 +248,7 @@ def main():
         row=current_row, column=1, columnspan=2, padx=(0, 0), pady=(30, 30),
         sticky='nsew',
     )
+    run_button.bind('<Return>', lambda e: run())
     current_row += 1
 
 
@@ -288,6 +291,120 @@ def main():
         side='left', fill='both', expand=True,
         padx=(5, 5), pady=(5, 5),
     )
+    
+    def About_page():
+            
+         abt = tk.Toplevel(window)
+         def close_about():
+            abt.destroy()
 
+         abt.grab_set()
+         
+         abt.title("About")
+          
+         lbl=tk.Label(
+             abt,
+             text ='Text2CC \n \n Copyright © 2021, Dana Lehman \n Copyright © 2020, Geoffrey M. Poore \n  ',
+             #anchor='e',
+             justify='center',
+             
+             )
+         lbl.grid(
+            #  column=0,
+            #  columnspan=4,
+            #  row=1,
+            #  rowspan=4,
+              pady=3,
+              padx=30,
+            #  sticky="NW"
+             )
 
+         vlbl=tk.Label(
+             abt,
+             text =f'Version:   {version.__version__} \n',
+             #bg = 'red',
+             #anchor="CENTER",
+             #width=max((len(text)))
+            )
+         vlbl.grid(
+            #  column=0,
+            #  columnspan=4,
+            #  row=2,
+            #  rowspan=4,
+              pady=3,
+            #  padx=30,
+            #  sticky="NW"
+             )  
+
+         liclbl = tk.Label(
+                abt,
+                text='License: BSD 3-Clause', 
+                #font=(None, 14), 
+                fg='blue', cursor='hand2',
+                )
+         liclbl.bind('<Button-1>', lambda x: webbrowser.open_new('https://github.com/licensee/licensee/blob/master/vendor/choosealicense.com/_licenses/bsd-3-clause.txt'))
+         liclbl.grid(
+                row=current_row, column=0, columnspan=column_count, padx=(30, 30),
+                #sticky='nsew',
+            )  
+
+         OK_BTN=tk.Button(
+             abt,
+             text="OK",
+             command=close_about,
+             anchor= 'center',
+            )
+         OK_BTN.bind('<Return>', lambda e: close_about())
+         OK_BTN.grid(
+            #  column=2,
+            #  columnspan=1,
+            #  row=5,
+            #  padx=30,
+              pady=30,
+            #  sticky="se"
+             )
+         OK_BTN.focus_set()
+        
+         # Gets the requested values of the height and widht.
+         windowWidth = abt.winfo_reqwidth()
+         windowHeight = abt.winfo_reqheight()
+
+         # Gets both half the screen width/height and window width/height
+         positionRight = int(abt.winfo_screenwidth()/2 - windowWidth/2)
+         positionDown = int(abt.winfo_screenheight()/2 - windowHeight/2)
+ 
+         # Positions the window in the center of the page.
+         abt.geometry("+{}+{}".format(positionRight, positionDown))
+         #abt.geometry("225x100+{}+{}".format(positionRight, positionDown))
+         abt.resizable(height= None, width= None)
+         abt.focus()
+         
+         #abt.bind('<Return>', close_about)
+    
+    def open_help():
+        webbrowser.open_new('https://github.com/dlehman83/text2cc/blob/master/README.md')
+
+    menubar = tk.Menu(window)
+    filemenu = tk.Menu(menubar, tearoff=False)
+    filemenu.add_command(label="Open",command=browse_files,underline=0)
+    filemenu.add_command(label="Run",command=run,underline=0)
+    filemenu.add_command(label="Exit",command=window.quit,underline=1)
+    menubar.add_cascade(label="File", menu=filemenu,underline=0)
+    helpmenu = tk.Menu(menubar, tearoff=False)
+    helpmenu.add_command(label="Help",underline=0,command=open_help)
+    helpmenu.add_command(label="About",command=About_page,underline=0)
+    menubar.add_cascade(label="Help", menu=helpmenu,underline=0)
+
+    # Gets the requested values of the height and widht.
+    windowWidth = window.winfo_reqwidth()
+    windowHeight = window.winfo_reqheight()
+
+    # Gets both half the screen width/height and window width/height
+    positionRight = int(window.winfo_screenwidth()/2 - windowWidth/2)
+    positionDown = int(window.winfo_screenheight()/2 - windowHeight/2)
+ 
+    # Positions the window in the center of the page.
+    window.geometry("+{}+{}".format(positionRight, positionDown))
+    window.config(menu=menubar)
+    window.bind('<Return>',run)
     window.mainloop()

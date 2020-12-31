@@ -1,13 +1,18 @@
 # Change Log
 
 
-## v0.6.10 (2020-12)
-* Forked and renamed Project
-* Removed use of assessment_meta, left file in repo for reference 
-* Changed imsmanifest for Schoology
+## v0.6.10 (2021-01)
+
+* Forked and renamed Project.
+* Removed use of assessment_meta, left file in repo for reference. 
+* Changed imsmanifest for Schoology.
 * Removed advanced features not supported or tested on Schoology.  
 * Converted question types to fit Schoology format.  
 * Added version file to support Windows file version info.
+* Added Menu Bar and other GUI Improvements.
+    * File Menu with Open, Run, and exit
+    * Help Menu with help link and about dialog box.
+    * Key Bindings and Keyboard Navigation.
 
 
 ## v0.5.0 (2020-09-28)
