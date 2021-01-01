@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #
+# Copyright (c) 2021, Dana Lehman
 # Copyright (c) 2020, Geoffrey M. Poore
 # All rights reserved.
 #

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #
+# Copyright (c) 2021, Dana Lehman
 # Copyright (c) 2020, Geoffrey M. Poore
 # All rights reserved.
 #
@@ -342,7 +343,7 @@ def main():
                 #font=(None, 14), 
                 fg='blue', cursor='hand2',
                 )
-         liclbl.bind('<Button-1>', lambda x: webbrowser.open_new('https://github.com/licensee/licensee/blob/master/vendor/choosealicense.com/_licenses/bsd-3-clause.txt'))
+         liclbl.bind('<Button-1>', lambda x: webbrowser.open_new('https://opensource.org/licenses/BSD-3-Clause'))
          liclbl.grid(
                 row=current_row, column=0, columnspan=column_count, padx=(30, 30),
                 #sticky='nsew',
