@@ -45,7 +45,7 @@ class QTI(object):
     def write(self, bytes_stream: BinaryIO):
         with zipfile.ZipFile(bytes_stream, 'w', compression=zipfile.ZIP_DEFLATED) as zf:
             zf.writestr('imsmanifest.xml', self.imsmanifest_xml)
-            zf.writestr(zipfile.ZipInfo('non_cc_assessments/'), b'')
+            #zf.writestr(zipfile.ZipInfo('non_cc_assessments/'), b'')
             
             zf.writestr(f'{self.assessment_identifier}/{self.assessment_identifier}.xml', self.assessment)
             for image in self.quiz.images.values():
