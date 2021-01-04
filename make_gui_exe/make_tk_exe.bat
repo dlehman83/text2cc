@@ -4,15 +4,15 @@ if not exist make_tk_exe.bat (
     pause
     exit
 )
-if not exist text2qti_tk.pyw (
-    echo Missing text2qti_tk.pyw in working directory
+if not exist text2cc_tk.pyw (
+    echo Missing text2cc_tk.pyw in working directory
     pause
     exit
 )
 
 REM Create and activate a conda env for packaging the .exe
-call conda create -y --name make_text2qti_gui_exe python=3.9 --no-default-packages
-call conda activate make_text2qti_gui_exe
+call conda create -y --name make_text2cc_gui_exe python=3.9 --no-default-packages
+call conda activate make_text2cc_gui_exe
 REM List conda envs -- useful for debugging
 call conda info --envs
 REM Install dependencies
@@ -20,7 +20,7 @@ pip install bespon
 pip install markdown
 pip install pyinstaller
 if exist ..\setup.py (
-    if exist ..\text2qti (
+    if exist ..\text2cc (
         cd ..
         pip install .
         cd make_gui_exe
@@ -32,10 +32,10 @@ rem pip install text2qti to prevent retrieving the wrong package.
   rem   pip install text2qti
 )
 REM Build .exe
-FOR /F "tokens=* USEBACKQ" %%g IN (`python -c "import text2qti; print(text2qti.__version__)"`) do (SET "TEXT2QTI_VERSION=%%g")
-del text2qti_tk_%TEXT2QTI_VERSION%.exe
+FOR /F "tokens=* USEBACKQ" %%g IN (`python -c "import text2cc; print(text2cc.__version__)"`) do (SET "text2cc_VERSION=%%g")
+del text2cc_tk_%text2cc_VERSION%.exe
 REM Set windows exe version info
-FOR /F "tokens=1,2,3 delims=." %%I in ("%TEXT2QTI_VERSION%") do (
+FOR /F "tokens=1,2,3 delims=." %%I in ("%text2cc_VERSION%") do (
     SET Maj=%%I
     SET Min=%%J
 	 SET Par=%%K
@@ -79,15 +79,15 @@ rem %Maj%, %Min%, %Par%,%Pri%
 
 
 
-pyinstaller -F --name text2qti_tk_%TEXT2QTI_VERSION% text2qti_tk.pyw --version-file version.txt
+pyinstaller -F --name text2cc_tk_%text2cc_VERSION% text2cc_tk.pyw --version-file version.txt
 
 REM Deactivate and delete conda env
 call conda deactivate
-call conda remove -y --name make_text2qti_gui_exe --all
+call conda remove -y --name make_text2cc_gui_exe --all
 REM List conda envs -- useful for debugging
 call conda info --envs
 REM Cleanup
-move dist\text2qti_tk_%TEXT2QTI_VERSION%.exe text2qti_tk_%TEXT2QTI_VERSION%.exe
+move dist\text2cc_tk_%text2cc_VERSION%.exe text2cc_tk_%text2cc_VERSION%.exe
 rd /s /q "__pycache__"
 rd /s /q "build"
 rd /s /q "dist"

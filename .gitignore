@@ -128,3 +128,4 @@ dmypy.json
 
 #vscode
 *.vscode
+make_gui_exe/*.exe

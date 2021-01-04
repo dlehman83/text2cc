@@ -24,11 +24,11 @@ from .qti import QTI
 
 def main():
     '''
-    text2qti executable main function.
+    text2cc executable main function.
     '''
-    parser = argparse.ArgumentParser(prog='text2qti')
+    parser = argparse.ArgumentParser(prog='text2cc')
     parser.set_defaults(func=lambda x: parser.print_help())
-    parser.add_argument('--version', action='version', version=f'text2qti {version}')
+    parser.add_argument('--version', action='version', version=f'text2cc {version}')
     parser.add_argument('--latex-render-url',
                         help='URL for rendering LaTeX equations')
     #parser.add_argument('--run-code-blocks', action='store_const', const=True,
@@ -43,7 +43,7 @@ def main():
     config.load()
     if not config.loaded_config_file:
         latex_render_url = input(textwrap.dedent('''\
-            It looks like text2qti has not been installed on this machine
+            It looks like text2cc has not been installed on this machine
             before.  Would you like to set a default LaTeX rendering URL?  If
             no, press ENTER.  If yes, provide the URL and press ENTER.
 

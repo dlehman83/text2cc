@@ -11,7 +11,7 @@
 
 import sys
 if sys.version_info < (3, 6):
-    sys.exit('text2qti requires Python 3.6+')
+    sys.exit('text2cc requires Python 3.6+')
 import pathlib
 from setuptools import setup, find_packages
 
@@ -19,29 +19,29 @@ from setuptools import setup, find_packages
 
 
 # Extract the version from version.py, using functions in fmtversion.py
-fmtversion_path = pathlib.Path(__file__).parent / 'text2qti' / 'fmtversion.py'
-exec(compile(fmtversion_path.read_text(encoding='utf8'), 'text2qti/fmtversion.py', 'exec'))
-version_path = pathlib.Path(__file__).parent / 'text2qti' / 'version.py'
+fmtversion_path = pathlib.Path(__file__).parent / 'text2cc' / 'fmtversion.py'
+exec(compile(fmtversion_path.read_text(encoding='utf8'), 'text2cc/fmtversion.py', 'exec'))
+version_path = pathlib.Path(__file__).parent / 'text2cc' / 'version.py'
 version = get_version_from_version_py_str(version_path.read_text(encoding='utf8'))
 
 readme_path = pathlib.Path(__file__).parent / 'README.md'
 long_description = readme_path.read_text(encoding='utf8')
 
 
-setup(name='text2qti',
+setup(name='text2cc',
       version=version,
       py_modules=[],
       packages=find_packages(),
       package_data = {},
-      description='Create quizzes in QTI format from Markdown-based plain text',
+      description='Create quizzes in Common Cartridge   format from Markdown-based plain text',
       long_description=long_description,
       long_description_content_type='text/markdown',
-      author='Geoffrey M. Poore',
-      author_email='gpoore@gmail.com',
-      url='http://github.com/gpoore/text2qti',
+      author='Dana Lehman',
+      author_email='',
+      url='http://github.com/dlehman83/text2cc',
       license='BSD',
       keywords=['QTI', 'IMS Question & Test Interoperability', 'quiz', 'test',
-          'exam', 'assessment', 'markdown', 'LaTeX', 'plain text'],
+          'exam', 'assessment', 'markdown', 'LaTeX', 'plain text','Common Cartridge'],
       python_requires='>=3.6',
       install_requires=[
           'bespon>=0.4',
@@ -60,7 +60,7 @@ setup(name='text2qti',
           'Topic :: Education :: Testing',
       ],
       entry_points = {
-          'console_scripts': ['text2qti = text2qti.cmdline:main'],
-          'gui_scripts': ['text2qti_tk = text2qti.gui.tk:main'],
+          'console_scripts': ['text2cc = text2cc.cmdline:main'],
+          'gui_scripts': ['text2cc_tk = text2cc.gui.tk:main'],
       },
 )
